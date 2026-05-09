@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPU Scheduling Simulator (RR vs SJF vs SRTF)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>CPU Scheduling Simulator</h1>
+        <h2>Comparison between Round Robin, Shortest Job First, and SRTF</h2>
+        
+        <div class="card scenario-card">
+            <h3>Required Test Scenarios</h3>
+            <p>Select a scenario from the drop-down menu to load the predefined workload:</p>
+            <div class="dropdown-row">
+                <select id="scenario-select" class="dropdown-select">
+                    <option value="" disabled selected>-- Click to choose a scenario --</option>
+                    <option value="A">Scenario A: Basic Mixed Workload</option>
+                    <option value="B">Scenario B: Short-Job Heavy Case</option>
+                    <option value="C">Scenario C: Fairness Case</option>
+                    <option value="D">Scenario D: Long-Job Sensitivity Case</option>
+                    <option value="E">Scenario E: Validation Case</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Process Input Panel</h3>
+            <div class="inputs-row">
+                <div class="form-group">
+                    <label for="quantum">Time Quantum:</label>
+                    <input type="number" id="quantum" value="4" min="1">
+                </div>
+            </div>
+            
+            <hr>
+            
+            <h4>Add New Processes Manually</h4>
+            <div class="add-process-row">
+                <input type="text" id="pid" placeholder="Process Name (e.g. P1)">
+                <input type="number" id="arrival" placeholder="Arrival Time" min="0">
+                <input type="number" id="burst" placeholder="Burst Time" min="1">
+                <button id="add-btn" class="btn">Add Process</button>
+            </div>
+            
+            <div class="table-wrapper">
+                <table id="process-table">
+                    <thead>
+                        <tr>
+                            <th>Process ID</th>
+                            <th>Arrival Time</th>
+                            <th>Burst Time</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            
+            <button id="simulate-btn" class="btn primary-btn">Start Simulation & Compare</button>
+        </div>
+
+        <div id="results-area" style="display: none;">
+            
+            <div class="card">
+                <h3>Dynamic Gantt Chart Simulation</h3>
+                <button id="play-gantt-btn" class="btn play-btn">▶ Start Gantt Simulation</button>
+                
+                <h4 style="margin-top: 20px;">1. Round Robin Gantt Chart</h4>
+                <div id="rr-gantt" class="gantt-container"></div>
+                
+                <h4>2. Shortest Job First (Non-Preemptive) Gantt Chart</h4>
+                <div id="sjf-gantt" class="gantt-container"></div>
+                
+                <h4>3. Shortest Remaining Time First (Preemptive) Gantt Chart</h4>
+                <div id="srtf-gantt" class="gantt-container"></div>
+            </div>
+
+            <div class="card">
+                <h3>Round Robin Ready Queue over Time</h3>
+                <div id="ready-queue-view" class="ready-queue-list"></div>
+            </div>
+
+            <div class="results-grid">
+                <div class="card">
+                    <h3>Round Robin Metrics Table</h3>
+                    <div class="table-wrapper">
+                        <table id="rr-results-table">
+                            <thead>
+                                <tr>
+                                    <th>Process</th>
+                                    <th>WT</th>
+                                    <th>TAT</th>
+                                    <th>RT</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div id="rr-averages" class="averages-label"></div>
+                </div>
+
+                <div class="card">
+                    <h3>SJF Metrics Table</h3>
+                    <div class="table-wrapper">
+                        <table id="sjf-results-table">
+                            <thead>
+                                <tr>
+                                    <th>Process</th>
+                                    <th>WT</th>
+                                    <th>TAT</th>
+                                    <th>RT</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div id="sjf-averages" class="averages-label"></div>
+                </div>
+
+                <div class="card">
+                    <h3>SRTF Metrics Table</h3>
+                    <div class="table-wrapper">
+                        <table id="srtf-results-table">
+                            <thead>
+                                <tr>
+                                    <th>Process</th>
+                                    <th>WT</th>
+                                    <th>TAT</th>
+                                    <th>RT</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div id="srtf-averages" class="averages-label"></div>
+                </div>
+            </div>
+
+            <div class="card summary-card">
+                <h3>Performance Comparison Summary</h3>
+                <div class="summary-stats">
+                    <div class="stat-box">
+                        <h4>Avg Waiting Time</h4>
+                        <p id="comp-wt"></p>
+                    </div>
+                    <div class="stat-box">
+                        <h4>Avg Turnaround Time</h4>
+                        <p id="comp-tat"></p>
+                    </div>
+                    <div class="stat-box">
+                        <h4>Avg Response Time</h4>
+                        <p id="comp-rt"></p>
+                    </div>
+                </div>
+                <hr>
+                <h3>Evaluation & Final Analysis</h3>
+                <div id="conclusion-text" class="conclusion-desc"></div>
+            </div>
+
+            <div class="card analytical-card">
+                <h3>Final Conclusion & Analytical Comparison</h3>
+                
+                <div class="analysis-point">
+                    <h4 style="color: #3b82f6; display: flex; align-items: center; gap: 8px;">
+                        <span>⚖️</span> Fairness versus efficiency
+                    </h4>
+                    <p><strong>Round Robin</strong> ensures high fairness by sharing CPU time equally through time slicing, preventing starvation. However, frequent context switching can reduce overall efficiency. <strong>SRTF</strong> maximizes efficiency by prioritizing short jobs to achieve the minimum average waiting time, but sacrifices fairness as long processes may suffer from starvation.</p>
+                </div>
+
+                <div class="analysis-point">
+                    <h4 style="color: #3b82f6; display: flex; align-items: center; gap: 8px;">
+                        <span>⏱️</span> Effect of time slicing versus shortest-job preference
+                    </h4>
+                    <p><strong>Time slicing (RR)</strong> guarantees regular CPU allocation, making it ideal for interactive systems where no process waits too long to be scheduled. <strong>Shortest-job preference (SRTF)</strong> heavily optimizes for throughput by quickly finishing tasks, but a steady stream of short tasks can indefinitely delay execution of longer ones.</p>
+                </div>
+
+                <div class="analysis-point">
+                    <h4 style="color: #3b82f6; display: flex; align-items: center; gap: 8px;">
+                        <span>🚀</span> Effect on first response time
+                    </h4>
+                    <p><strong>Round Robin</strong> generally provides a better and more predictable first response time for all processes since they all get a turn within a bounded time frame. <strong>SRTF</strong> provides lightning-fast response times for short jobs, but significantly poorer response times for long jobs if short jobs keep arriving.</p>
+                </div>
+
+                <div class="analysis-point">
+                    <h4 style="color: #3b82f6; display: flex; align-items: center; gap: 8px;">
+                        <span>↔️</span> Effect of quantum size on Round Robin behavior
+                    </h4>
+                    <p>A <strong>smaller quantum</strong> improves response time but increases context switching overhead, hurting overall throughput. A <strong>larger quantum</strong> reduces overhead but makes RR degrade into First-Come-First-Served (FCFS), which hurts interactive response times. The optimal quantum balances response time and context switch overhead.</p>
+                </div>
+
+                <div class="analysis-point">
+                    <h4 style="color: #3b82f6; display: flex; align-items: center; gap: 8px;">
+                        <span>⚡</span> Whether SRTF gives a strong advantage to short jobs
+                    </h4>
+                    <p><strong>Yes</strong>, SRTF heavily favors short jobs by immediately preempting currently running longer jobs. This yields the mathematically optimal minimum average waiting time for the system, making it highly effective when the system has many quick tasks to complete, at the direct expense of long jobs.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
