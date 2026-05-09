@@ -2,6 +2,20 @@
 
 An interactive, animated simulation tool developed to compare CPU Scheduling algorithms: **Round Robin (RR)** and **Non-Preemptive Shortest Job First (SJF)**.
 
+* **Programming Language:** JavaScript/Node.js
+* **GUI Technology:** HTML/CSS (Web-based GUI)
+
+---
+
+## 👥 Team Members
+* **عبدالعزيز هشام عبدالعزيز محمد** - 20211122
+* **محمد صابر نوح** - 20240835
+* **عمرو أكرم عبدالعزيز عبدالخالق** - 20240664
+* **عبدالرحمن جمال محمد خليفه** - 20240531
+* **احمد على عبدالرحيم** - 20240060
+* **عادل ياسر محمد منصور** - 20240505
+* **سامي احمد محمد سامي** - 20240412
+
 ---
 
 ## 🚀 Features
@@ -43,6 +57,6 @@ Ensure you have **Node.js** installed on your system.
 
 ### Steps
 1. Navigate to the root directory `OS_SIMULATOR`.
-2. Install the necessary server packages by running:
-   ```bash
-   npm install
+2. Install the necessary server packages by running: `npm install`
+3. Start the application by running: `npm start`
+4. Open your browser and navigate to `http://localhost:3000` (or the port specified in your terminal).
